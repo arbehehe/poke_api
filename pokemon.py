@@ -50,7 +50,7 @@ class api_handle:
         response = Image.open(BytesIO(response.content))
         return response
         
-
+queried_type_storage_dict = {}
 
 class pokemonInfo:  
     
@@ -70,20 +70,22 @@ class pokemonInfo:
         return self.api.get_request_sprite(self.data.get('id'), back_view, shiny)
         
     def __process_pokemon_type_weakness(self):
-        type_weakness = {}
         
+        type_weakness = {}
         for poke_type in self.get_type_name():
-            response = self.api.get_request_type(poke_type).json()
-            double_damage_from = [type_data['name'] for type_data in response['damage_relations']['double_damage_from']]
-            half_damage_from = [type_data['name'] for type_data in response['damage_relations']['half_damage_from']]
-            no_damage_from = [type_data['name'] for type_data in response['damage_relations']['no_damage_from']]
+            if poke_type not in queried_type_storage_dict:
+                response = self.api.get_request_type(poke_type).json()
+                double_damage_from = [type_data['name'] for type_data in response['damage_relations']['double_damage_from']]
+                half_damage_from = [type_data['name'] for type_data in response['damage_relations']['half_damage_from']]
+                no_damage_from = [type_data['name'] for type_data in response['damage_relations']['no_damage_from']]
 
-            type_weakness[poke_type] = {
-                'double_damage_from': double_damage_from,
-                'half_damage_from': half_damage_from,
-                'no_damage_from': no_damage_from
-            }
-
+                type_weakness[poke_type] = {
+                    'double_damage_from': double_damage_from,
+                    'half_damage_from': half_damage_from,
+                    'no_damage_from': no_damage_from
+                }
+            else:
+                type_weakness[poke_type] = queried_type_storage_dict[poke_type]
         return type_weakness
                 
     def check_type_weakness(self):
