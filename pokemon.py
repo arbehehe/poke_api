@@ -84,6 +84,12 @@ class pokemonInfo:
                     'half_damage_from': half_damage_from,
                     'no_damage_from': no_damage_from
                 }
+                
+                queried_type_storage_dict[poke_type] = {
+                    'double_damage_from': double_damage_from,
+                    'half_damage_from': half_damage_from,
+                    'no_damage_from': no_damage_from
+                }
             else:
                 type_weakness[poke_type] = queried_type_storage_dict[poke_type]
         return type_weakness
